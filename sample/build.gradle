@@ -20,6 +20,6 @@ android {
 
 dependencies {
   implementation libs.composeUi.material
-
+  implementation libs.androidx.constraintlayout
   testImplementation libs.testParameterInjector
 }
