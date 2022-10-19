@@ -144,7 +144,15 @@ class Paparazzi @JvmOverloads constructor(
   }
 
   fun prepare(description: Description) {
-    forcePlatformSdkVersion(environment.compileSdkVersion)
+    if (environment.compileSdkVersion > 32) {
+      // The version of layout we're using only works up to SDK level 32, so we need to coerce
+      // the compileSdkVersion down to 32
+      forceBuildVersionProp("SDK_INT", 32)
+      forceBuildVersionProp("CODENAME", "Sv2")
+    } else {
+      // Otherwise we just pass through the compile sdk
+      forceBuildVersionProp("SDK_INT", environment.compileSdkVersion)
+    }
 
     val layoutlibCallback =
       PaparazziCallback(logger, environment.packageName, environment.resourcePackageNames)
@@ -396,7 +404,7 @@ class Paparazzi @JvmOverloads constructor(
     return TestName(packageName, className, methodName)
   }
 
-  private fun forcePlatformSdkVersion(compileSdkVersion: Int) {
+  private fun forceBuildVersionProp(name: String, value: Any) {
     val buildVersionClass = try {
       Paparazzi::class.java.classLoader.loadClass("android.os.Build\$VERSION")
     } catch (e: ClassNotFoundException) {
@@ -404,8 +412,8 @@ class Paparazzi @JvmOverloads constructor(
       return
     }
     buildVersionClass
-      .getFieldReflectively("SDK_INT")
-      .setStaticValue(compileSdkVersion)
+      .getFieldReflectively(name)
+      .setStaticValue(value)
   }
 
   private fun initializeAppCompatIfPresent() {
