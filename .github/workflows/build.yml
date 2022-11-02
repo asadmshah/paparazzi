@@ -79,6 +79,8 @@ jobs:
 
       - name: Publish Artifacts to Github
         run: ./gradlew -p paparazzi publishMavenPublicationToGithubPackagesRepository paparazzi-gradle-plugin:publishPluginMavenPublicationToGithubPackagesRepository paparazzi-gradle-plugin:publishPaparazziPluginMarkerMavenPublicationToGithubPackagesRepository --no-parallel
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #      - name: Set up Python ${{ matrix.python-version }}
 #        uses: actions/setup-python@v4
