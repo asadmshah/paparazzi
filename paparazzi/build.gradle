@@ -63,9 +63,12 @@ subprojects {
          * internalPassword=YOUR_PASSWORD
          */
         maven {
-          name = "internal"
-          url = providers.gradleProperty("internalUrl")
-          credentials(PasswordCredentials)
+          name = "GithubPackages"
+          url = "https://maven.pkg.github.com/asadmshah/paparazzi"
+          credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
+          }
         }
       }
     }
